@@ -7,6 +7,10 @@
   <ItemGroup>
     <Compile Remove="Migrations\20200610211542_IntaDb.cs" />
     <Compile Remove="Migrations\20200610211542_IntaDb.Designer.cs" />
+    <Compile Remove="Migrations\20200610211624_InitialDb.cs" />
+    <Compile Remove="Migrations\20200610211624_InitialDb.Designer.cs" />
+    <Compile Remove="Migrations\20200618192440_CompleteDB.cs" />
+    <Compile Remove="Migrations\20200618192440_CompleteDB.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
