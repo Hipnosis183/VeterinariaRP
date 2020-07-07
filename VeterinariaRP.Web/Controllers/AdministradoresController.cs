@@ -6,22 +6,22 @@ using VeterinariaRP.Web.Data.Entities;
 
 namespace VeterinariaRP.Web.Controllers
 {
-    public class PropietariosController : Controller
+    public class AdministradoresController : Controller
     {
         private readonly DataContext _context;
 
-        public PropietariosController(DataContext context)
+        public AdministradoresController(DataContext context)
         {
             _context = context;
         }
 
-        // GET: Propietarios
+        // GET: Administradors
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Propietarios.ToListAsync());
+            return View(await _context.Administradores.ToListAsync());
         }
 
-        // GET: Propietarios/Details/5
+        // GET: Administradors/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -29,39 +29,39 @@ namespace VeterinariaRP.Web.Controllers
                 return NotFound();
             }
 
-            var propietario = await _context.Propietarios
+            var administrador = await _context.Administradores
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (propietario == null)
+            if (administrador == null)
             {
                 return NotFound();
             }
 
-            return View(propietario);
+            return View(administrador);
         }
 
-        // GET: Propietarios/Create
+        // GET: Administradors/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Propietarios/Create
+        // POST: Administradors/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id")] Propietario propietario)
+        public async Task<IActionResult> Create([Bind("Id")] Administrador administrador)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(propietario);
+                _context.Add(administrador);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(propietario);
+            return View(administrador);
         }
 
-        // GET: Propietarios/Edit/5
+        // GET: Administradors/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -69,22 +69,22 @@ namespace VeterinariaRP.Web.Controllers
                 return NotFound();
             }
 
-            var propietario = await _context.Propietarios.FindAsync(id);
-            if (propietario == null)
+            var administrador = await _context.Administradores.FindAsync(id);
+            if (administrador == null)
             {
                 return NotFound();
             }
-            return View(propietario);
+            return View(administrador);
         }
 
-        // POST: Propietarios/Edit/5
+        // POST: Administradors/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id")] Propietario propietario)
+        public async Task<IActionResult> Edit(int id, [Bind("Id")] Administrador administrador)
         {
-            if (id != propietario.Id)
+            if (id != administrador.Id)
             {
                 return NotFound();
             }
@@ -93,12 +93,12 @@ namespace VeterinariaRP.Web.Controllers
             {
                 try
                 {
-                    _context.Update(propietario);
+                    _context.Update(administrador);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PropietarioExists(propietario.Id))
+                    if (!AdministradorExists(administrador.Id))
                     {
                         return NotFound();
                     }
@@ -109,10 +109,10 @@ namespace VeterinariaRP.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(propietario);
+            return View(administrador);
         }
 
-        // GET: Propietarios/Delete/5
+        // GET: Administradors/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -120,30 +120,30 @@ namespace VeterinariaRP.Web.Controllers
                 return NotFound();
             }
 
-            var propietario = await _context.Propietarios
+            var administrador = await _context.Administradores
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (propietario == null)
+            if (administrador == null)
             {
                 return NotFound();
             }
 
-            return View(propietario);
+            return View(administrador);
         }
 
-        // POST: Propietarios/Delete/5
+        // POST: Administradors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var propietario = await _context.Propietarios.FindAsync(id);
-            _context.Propietarios.Remove(propietario);
+            var administrador = await _context.Administradores.FindAsync(id);
+            _context.Administradores.Remove(administrador);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PropietarioExists(int id)
+        private bool AdministradorExists(int id)
         {
-            return _context.Propietarios.Any(e => e.Id == id);
+            return _context.Administradores.Any(e => e.Id == id);
         }
     }
 }

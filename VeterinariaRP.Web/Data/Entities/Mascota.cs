@@ -20,7 +20,7 @@ namespace VeterinariaRP.Web.Data.Entities
 
         [Required(ErrorMessage = DataContext.RequiredError)]
         [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString = "{0:YYYY/MM/DD}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime Nacimiento { get; set; }
 
         public string Comentarios { get; set; }
@@ -30,7 +30,7 @@ namespace VeterinariaRP.Web.Data.Entities
             : $"htps://{ImagenUrl.Substring(1)}";
 
         [Display(Name = "Nacimiento")]
-        [DisplayFormat(DataFormatString = "{0:YYYY/MM/DD}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime NacimientoLocal => Nacimiento.ToLocalTime();
 
         public TipoMascota TipoMascota { get; set; }

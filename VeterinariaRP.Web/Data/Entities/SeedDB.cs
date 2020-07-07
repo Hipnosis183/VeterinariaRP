@@ -1,21 +1,66 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using VeterinariaRP.Web.Helpers;
 
 namespace VeterinariaRP.Web.Data.Entities
 {
     public class SeedDB
     {
         public readonly DataContext _Context;
+        public readonly IUserHelper _UserHelper;
         
-        public SeedDB(DataContext Context)
+        public SeedDB(DataContext Context, IUserHelper UserHelper)
         {
             _Context = Context;
+            _UserHelper = UserHelper;
         }
 
         public async Task SeedAsync()
         {
             await _Context.Database.EnsureCreatedAsync();
+
+            await CheckRolesAsync();
+
+            User Administrador = await CheckUserAsync("1010", "Renzo", "Pigliacampo", "renzo.pigliacampo@gmail.com", "350 634 2747", "Calle", "Admin");
+            User Cliente = await CheckUserAsync("2020", "Renzo", "Pigliacampo", "renzo.pigliacampo@gmail.com", "350 634 2747", "Calle", "Cliente");
+
+            await CheckAdministradoresAsync(Administrador);
+            await CheckPropietariosAsync(Cliente);
+            await CheckTipoMascotasAsync();
+            await CheckMascotasAsync();
+            await CheckTipoServiciosAsync();
+            await CheckAgendasAsync();
+        }
+
+        private async Task CheckRolesAsync()
+        {
+            await _UserHelper.CheckRoleAsync("Admin");
+            await _UserHelper.CheckRoleAsync("Cliente");
+        }
+
+        private async Task<User> CheckUserAsync(string Documento, string Nombre, string Apellido, string Email, string Telefono, string Direccion, string Rol)
+        {
+            User User = await _UserHelper.GetUserByEmailAsync(Email);
+
+            if (User == null)
+            {
+                User = new User
+                {
+                    Nombre = Nombre,
+                    Apellido = Apellido,
+                    Email = Email,
+                    UserName = Email,
+                    PhoneNumber = Telefono,
+                    Direccion = Direccion,
+                    Documento = Documento,
+                };
+
+                await _UserHelper.AddUserAsync(User, "123456");
+                await _UserHelper.AddUserToRoleAsync(User, Rol);
+            }
+
+            return User;
         }
 
         public async Task CheckTipoServiciosAsync()
@@ -41,13 +86,21 @@ namespace VeterinariaRP.Web.Data.Entities
             }
         }
 
-        public async Task CheckPropietariosAsync()
+        public async Task CheckPropietariosAsync(User User)
         {
             if (!_Context.Propietarios.Any())
             {
-                AddPropietarios("3125895", "Juan", "Soto", "231 3232", "341 5453221", "Calle Mitre 1111");
-                AddPropietarios("6321456", "José", "Cardona", "343 3226", "346 508701", "Calle Belgrano 112");
-                AddPropietarios("6565897", "María", "López", "450 4323", "341 151515", "José Ingeniero 123");
+                _Context.Propietarios.Add(new Propietario { User = User });
+
+                await _Context.SaveChangesAsync();
+            }
+        }
+
+        public async Task CheckAdministradoresAsync(User User)
+        {
+            if (!_Context.Administradores.Any())
+            {
+                _Context.Administradores.Add(new Administrador { User = User });
 
                 await _Context.SaveChangesAsync();
             }
@@ -98,19 +151,6 @@ namespace VeterinariaRP.Web.Data.Entities
 
                 await _Context.SaveChangesAsync();
             }
-        }
-
-        private void AddPropietarios(string Documento, string Nombre, string Apellido, string TelCelular, string TelFijo, string Direccion)
-        {
-            _Context.Propietarios.Add(new Propietario
-            {
-                Documento = Documento,
-                Nombre = Nombre,
-                Apellido = Apellido,
-                TelCelular = TelCelular,
-                TelFijo = TelFijo,
-                Direccion = Direccion
-            });
         }
 
         private void AddMascotas(string Nombre, Propietario Propietario, TipoMascota TipoMascota, string Raza)

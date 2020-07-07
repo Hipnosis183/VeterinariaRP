@@ -31,11 +31,13 @@ namespace VeterinariaRP.Web
                 SeedDB Seeder = Scope.ServiceProvider.GetService<SeedDB>();
                 Seeder.SeedAsync().Wait();
 
+                /*
                 Seeder.CheckPropietariosAsync().Wait();
                 Seeder.CheckTipoMascotasAsync().Wait();
                 Seeder.CheckMascotasAsync().Wait();
                 Seeder.CheckTipoServiciosAsync().Wait();
                 Seeder.CheckAgendasAsync().Wait();
+                */
             }
         }
 
