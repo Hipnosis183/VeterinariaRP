@@ -34,6 +34,8 @@ namespace VeterinariaRP.Web
                 cfg.Password.RequireUppercase = false;
             }).AddEntityFrameworkStores<DataContext>();
 
+            services.ConfigureApplicationCookie(options => options.LoginPath = "/Cuenta/Login");
+
             services.AddDbContext<DataContext>(cfg =>
             {
                 cfg.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using VeterinariaRP.Web.Data.Entities;
+using VeterinariaRP.Web.Models;
 
 namespace VeterinariaRP.Web.Helpers
 {
@@ -8,11 +9,13 @@ namespace VeterinariaRP.Web.Helpers
     {
         private readonly UserManager<User> _UserManager;
         private readonly RoleManager<IdentityRole> _RoleManager;
+        private readonly SignInManager<User> _SignInManager;
 
-        public UserHelper(UserManager<User> UserManager, RoleManager<IdentityRole> RoleManager)
+        public UserHelper(UserManager<User> UserManager, RoleManager<IdentityRole> RoleManager, SignInManager<User> SignInManager)
         {
             _UserManager = UserManager;
             _RoleManager = RoleManager;
+            _SignInManager = SignInManager;
         }
 
         public async Task<IdentityResult> AddUserAsync(User User, string Password)
@@ -48,6 +51,16 @@ namespace VeterinariaRP.Web.Helpers
         public async Task<bool> IsUserInRoleAsync(User User, string RoleName)
         {
             return await _UserManager.IsInRoleAsync(User, RoleName);
+        }
+
+        public async Task<SignInResult> LoginAsync(LoginViewModel Model)
+        {
+            return await _SignInManager.PasswordSignInAsync(Model.NombreUsuario, Model.Password, Model.Recordarme, false);
+        }
+
+        public async Task LogoutAsync()
+        {
+            await _SignInManager.SignOutAsync();
         }
     }
 }

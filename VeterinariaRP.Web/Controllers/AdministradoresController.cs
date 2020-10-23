@@ -1,11 +1,13 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VeterinariaRP.Web.Data.Entities;
 
 namespace VeterinariaRP.Web.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdministradoresController : Controller
     {
         private readonly DataContext _context;

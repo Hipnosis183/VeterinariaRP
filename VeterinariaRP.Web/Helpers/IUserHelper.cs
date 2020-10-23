@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using VeterinariaRP.Web.Data.Entities;
+using VeterinariaRP.Web.Models;
 
 namespace VeterinariaRP.Web.Helpers
 {
@@ -15,5 +16,9 @@ namespace VeterinariaRP.Web.Helpers
         Task AddUserToRoleAsync(User User, string RoleName);
 
         Task<bool> IsUserInRoleAsync(User User, string RoleName);
+
+        Task<SignInResult> LoginAsync(LoginViewModel Model);
+
+        Task LogoutAsync();
     }
 }
