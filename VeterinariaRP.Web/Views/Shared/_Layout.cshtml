@@ -50,6 +50,19 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Agenda" asp-action="Index">Turnos</a>
                             </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link text-dark dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">ABM Tipos</a>
+                                <div class="dropdown-menu">
+                                    <ul>
+                                        <li>
+                                            <a class="dropdown-item text-dark" asp-area="" asp-controller="TipoMascotas" asp-action="Index">Tipos de Mascotas</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item text-dark" asp-area="" asp-controller="TipoServicios" asp-action="Index">Tipos de Servicios</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
                         }
                     </ul>
                 </div>

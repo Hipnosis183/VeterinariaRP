@@ -19,7 +19,6 @@ namespace VeterinariaRP.Web.Data.Entities
         public string Raza { get; set; }
 
         [Required(ErrorMessage = DataContext.RequiredError)]
-        [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime Nacimiento { get; set; }
 

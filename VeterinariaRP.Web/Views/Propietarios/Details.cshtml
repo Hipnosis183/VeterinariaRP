@@ -1,18 +1,130 @@
 ﻿@model VeterinariaRP.Web.Data.Entities.Propietario
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalles";
 }
 
-<h1>Details</h1>
-
+<h1>Propietario</h1>
+<br />
 <div>
-    <h4>Propietario</h4>
+    <h4>Detalles</h4>
     <hr />
-    <dl class="row">
+    <dl class="list-group-horizontal-lg">
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Documento)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.Documento)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Nombre)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.Nombre)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Apellido)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.Apellido)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.Email)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Direccion)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.Direccion)
+        </dd>
+        <dt>
+            Cantidad de Mascotas
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Mascotas.Count)
+        </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a> |
+    <a asp-action="AddMascota" asp-route-id="@Model.Id" class="btn btn-success">Añadir Mascota</a> |
+    <a asp-action="Index" class="btn btn-danger">Volver</a>
 </div>
+<br />
+<br />
+@if (Model.Mascotas.Count == 0)
+{
+    <h4>Sin Mascotas</h4>
+}
+
+else
+{
+    <h4>Lista de Mascotas</h4>
+    <br />
+    <table class="table">
+        <thread>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().Nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().ImagenUrl)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().Raza)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().TipoMascota.Nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().NacimientoLocal)
+                </th>
+                <th>
+                    Historias
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().Comentarios)
+                </th>
+            </tr>
+        </thread>
+        <tbody>
+            @foreach (var item in Model.Mascotas)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.ImagenUrl))
+                    {
+                        <img src="@Url.Content(item.ImagenUrl)" alt="Image" style="width:200px; height:200px; max-width:100%; height:auto;" />
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Raza)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TipoMascota.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NacimientoLocal)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Historias.Count)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comentarios)
+                </td>
+                <td>
+                    <a asp-action="EditMascota" asp-route-id="@item.Id" class="btn btn-primary">Editar</a> |
+                    <a asp-action="DetailsMascota" asp-route-id="@item.Id" class="btn btn-info">Detalles</a> |
+                    <a asp-action="DeleteMascota" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}

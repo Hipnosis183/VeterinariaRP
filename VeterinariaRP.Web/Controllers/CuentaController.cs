@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using VeterinariaRP.Web.Helpers;
@@ -9,7 +8,7 @@ namespace VeterinariaRP.Web.Controllers
 {
     public class CuentaController : Controller
     {
-        public readonly IUserHelper _UserHelper;
+        private readonly IUserHelper _UserHelper;
 
         public CuentaController(IUserHelper UserHelper)
         {
@@ -38,7 +37,7 @@ namespace VeterinariaRP.Web.Controllers
                     return RedirectToAction("Index", "Home");
                 }
 
-                ModelState.AddModelError(String.Empty, "Usuario o contraseña no válida.");
+                ModelState.AddModelError(string.Empty, "Usuario o contraseña no válida.");
             }
 
             return View(Model);

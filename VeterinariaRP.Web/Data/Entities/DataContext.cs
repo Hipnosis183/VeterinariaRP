@@ -23,5 +23,6 @@ namespace VeterinariaRP.Web.Data.Entities
 
         public const string RequiredError = "El campo {0} es obligatorio.";
         public const string LenghtError = "El campo {0} no puede tener más de {1} caracteres.";
+        public const string LenghtError2 = "El campo {0} debe contener entre {2} y {1} caracteres.";
     }
 }
