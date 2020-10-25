@@ -6,6 +6,8 @@ namespace VeterinariaRP.Web.Helpers
 {
     public interface IConverterHelper
     {
-        Task<Mascota> ToMascotaAsync(MascotaViewModel Model, string Ruta);
+        Task<Mascota> ToMascotaAsync(MascotaViewModel Model, string Ruta, bool EsNuevo);
+
+        MascotaViewModel ToMascotaViewModel(Mascota Mascota);
     }
 }

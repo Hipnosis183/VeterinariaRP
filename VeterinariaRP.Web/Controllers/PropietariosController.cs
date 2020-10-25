@@ -23,13 +23,15 @@ namespace VeterinariaRP.Web.Controllers
         private readonly IUserHelper _UserHelper;
         private readonly IComboHelper _ComboHelper;
         private readonly IConverterHelper _ConverterHelper;
+        private readonly IImagenHelper _ImagenHelper;
 
-        public PropietariosController(DataContext context, IUserHelper UserHelper, IComboHelper ComboHelper, IConverterHelper ConverterHelper)
+        public PropietariosController(DataContext context, IUserHelper UserHelper, IComboHelper ComboHelper, IConverterHelper ConverterHelper, IImagenHelper ImagenHelper)
         {
             _Context = context;
             _UserHelper = UserHelper;
             _ComboHelper = ComboHelper;
             _ConverterHelper = ConverterHelper;
+            _ImagenHelper = ImagenHelper;
         }
 
         // GET: Propietarios
@@ -147,9 +149,9 @@ namespace VeterinariaRP.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id")] Propietario propietario)
+        public async Task<IActionResult> Edit(int id, [Bind("Id")] Propietario Propietario)
         {
-            if (id != propietario.Id)
+            if (id != Propietario.Id)
             {
                 return NotFound();
             }
@@ -158,12 +160,12 @@ namespace VeterinariaRP.Web.Controllers
             {
                 try
                 {
-                    _Context.Update(propietario);
+                    _Context.Update(Propietario);
                     await _Context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PropietarioExists(propietario.Id))
+                    if (!PropietarioExists(Propietario.Id))
                     {
                         return NotFound();
                     }
@@ -174,7 +176,7 @@ namespace VeterinariaRP.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(propietario);
+            return View(Propietario);
         }
 
         // GET: Propietarios/Delete/5
@@ -244,22 +246,52 @@ namespace VeterinariaRP.Web.Controllers
 
                 if (Model.ArchivoImagen != null)
                 {
-                    string GUID = Guid.NewGuid().ToString();
-                    string Archivo = $"{GUID}.jpg";
-
-                    Ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\Mascotas", Archivo);
-
-                    using (FileStream Stream = new FileStream(Ruta, FileMode.Create))
-                    {
-                        await Model.ArchivoImagen.CopyToAsync(Stream);
-                    }
-
-                    Ruta = $"~/images/Mascotas/{Archivo}";
+                    Ruta = await _ImagenHelper.UploadImageAsync(Model.ArchivoImagen);
                 }
 
-                Mascota Mascota = await _ConverterHelper.ToMascotaAsync(Model, Ruta);
+                Mascota Mascota = await _ConverterHelper.ToMascotaAsync(Model, Ruta, true);
 
                 _Context.Mascotas.Add(Mascota);
+                await _Context.SaveChangesAsync();
+
+                return new RedirectResult(HttpUtility.UrlDecode((Url.Action($"Details/{Model.PropietarioId}", "Propietarios"))));
+            }
+
+            return View(Model);
+        }
+
+        public async Task<IActionResult> EditMascota(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Mascota Mascota = await _Context.Mascotas.Include(p => p.Propietario).Include(p => p.TipoMascota).FirstOrDefaultAsync(p => p.Id == id);
+
+            if (Mascota == null)
+            {
+                return NotFound();
+            }
+
+            return View(_ConverterHelper.ToMascotaViewModel(Mascota));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditMascota(MascotaViewModel Model)
+        {
+            if (ModelState.IsValid)
+            {
+                string Ruta = string.Empty;
+
+                if (Model.ArchivoImagen != null)
+                {
+                    Ruta = await _ImagenHelper.UploadImageAsync(Model.ArchivoImagen);
+                }
+
+                Mascota Mascota = await _ConverterHelper.ToMascotaAsync(Model, Ruta, false);
+
+                _Context.Mascotas.Update(Mascota);
                 await _Context.SaveChangesAsync();
 
                 return new RedirectResult(HttpUtility.UrlDecode((Url.Action($"Details/{Model.PropietarioId}", "Propietarios"))));

@@ -46,6 +46,7 @@ namespace VeterinariaRP.Web
             services.AddScoped<IUserHelper, UserHelper>();
             services.AddScoped<IComboHelper, ComboHelper>();
             services.AddScoped<IConverterHelper, ConverterHelper>();
+            services.AddScoped<IImagenHelper, ImagenHelper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
