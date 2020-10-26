@@ -231,7 +231,7 @@ namespace VeterinariaRP.Web.Controllers
             { 
                 Nacimiento = DateTime.Today,
                 PropietarioId = Propietario.Id,
-                TipoMascota = _ComboHelper.GetComboTipoMascota()
+                TipoMascotas = _ComboHelper.GetComboTipoMascota()
             };
 
             return View(Model);
@@ -256,6 +256,8 @@ namespace VeterinariaRP.Web.Controllers
 
                 return new RedirectResult(HttpUtility.UrlDecode((Url.Action($"Details/{Model.PropietarioId}", "Propietarios"))));
             }
+
+            Model.TipoMascotas = _ComboHelper.GetComboTipoMascota();
 
             return View(Model);
         }
@@ -297,7 +299,27 @@ namespace VeterinariaRP.Web.Controllers
                 return new RedirectResult(HttpUtility.UrlDecode((Url.Action($"Details/{Model.PropietarioId}", "Propietarios"))));
             }
 
+            Model.TipoMascotas = _ComboHelper.GetComboTipoMascota();
+
             return View(Model);
+        }
+
+        public async Task<IActionResult> DetailsMascota(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Mascota Mascota = await _Context.Mascotas.Include(m => m.Propietario).ThenInclude(p => p.User).Include(p => p.TipoMascota)
+                                    .Include(m => m.Historias).ThenInclude(h => h.TipoServicio).FirstOrDefaultAsync(p => p.Id == id);
+
+            if (Mascota == null)
+            {
+                return NotFound();
+            }
+
+            return View(_ConverterHelper.ToMascotaViewModel(Mascota));
         }
     }
 }

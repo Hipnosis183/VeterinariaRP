@@ -19,6 +19,6 @@ namespace VeterinariaRP.Web.Models
         [Display(Name = "Imagen")]
         public IFormFile ArchivoImagen { get; set; }
 
-        public IEnumerable<SelectListItem> TipoMascota { get; set; }
+        public IEnumerable<SelectListItem> TipoMascotas { get; set; }
     }
 }

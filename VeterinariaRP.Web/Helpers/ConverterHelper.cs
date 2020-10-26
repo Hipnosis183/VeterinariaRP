@@ -34,11 +34,6 @@ namespace VeterinariaRP.Web.Helpers
                 Comentarios = Model.Comentarios
             };
 
-            if (Model.Id != 0)
-            {
-                Mascota.Id = Model.Id;
-            }
-
             return Mascota;
         }
 
@@ -52,14 +47,13 @@ namespace VeterinariaRP.Web.Helpers
                 ImagenUrl = Mascota.ImagenUrl,
                 Nombre = Mascota.Nombre,
                 Propietario = Mascota.Propietario,
-                // Ver TipoMascota, muestra una lista de numeros en vez de strings.
-                // TipoMascota = Mascota.TipoMascota,
-                TipoMascota = _ComboHelper.GetComboTipoMascota(),
+                TipoMascota = Mascota.TipoMascota,
                 Raza = Mascota.Raza,
                 Comentarios = Mascota.Comentarios,
                 Id = Mascota.Id,
                 PropietarioId = Mascota.Propietario.Id,
-                TipoMascotaId = Mascota.TipoMascota.Id
+                TipoMascotaId = Mascota.TipoMascota.Id,
+                TipoMascotas = _ComboHelper.GetComboTipoMascota()
             };
         }
     }

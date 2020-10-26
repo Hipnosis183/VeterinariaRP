@@ -1,0 +1,111 @@
+﻿@model VeterinariaRP.Web.Data.Entities.Mascota
+@{
+    ViewData["Title"] = "Detalles Mascota";
+}
+
+<h1>Mascota</h1>
+<br />
+<div>
+    <h4>Detalles</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <dl class="dl-horizontal">
+                <dt>
+                    Propietario
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Propietario.User.Nombre)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Nombre)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Raza)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Raza)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Nacimiento)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Nacimiento)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Comentarios)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Comentarios)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-md-4">
+            @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+            {
+                <img src="@Url.Content(Model.ImagenUrl)" alt="Image" style="width:400px; height:400px; max-width:100%; height:auto;" />
+            }
+        </div>
+    </div>
+</div>
+<div>
+    <a asp-action="EditMascota" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a> |
+    <a asp-action="AddHistoria" asp-route-id="@Model.Id" class="btn btn-success">Añadir Historia</a> |
+    <a asp-action="Details" asp-route-id="@Model.Propietario.Id" class="btn btn-danger">Volver</a>
+</div>
+<br />
+<br />
+@if (Model.Historias.Count == 0)
+{
+    <h4>Sin Historias</h4>
+}
+
+else
+{
+    <h4>Lista de Historias</h4>
+    <br />
+    <table class="table">
+        <thread>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Historias.FirstOrDefault().FechaLocal)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Historias.FirstOrDefault().TipoServicio.Nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Historias.FirstOrDefault().Descripcion)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Historias.FirstOrDefault().Comentarios)
+                </th>
+            </tr>
+        </thread>
+        <tbody>
+            @foreach (var item in Model.Historias)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FechaLocal)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TipoServicio.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Descripcion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Comentarios)
+                    </td>
+                    <td>
+                        <a asp-action="EditHistorias" asp-route-id="@item.Id" class="btn btn-primary">Editar</a> |
+                        <a asp-action="DeleteHistorias" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

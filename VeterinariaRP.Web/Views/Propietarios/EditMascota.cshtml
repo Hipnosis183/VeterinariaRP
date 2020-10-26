@@ -13,36 +13,7 @@
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="PropietarioId" />
             <input type="hidden" asp-for="ImagenUrl" />
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control">
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ArchivoImagen" class="control-label"></label>
-                <input asp-for="ArchivoImagen" class="form-control">
-                <span asp-validation-for="ArchivoImagen" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TipoMascotaId" class="control-label"></label>
-                <input asp-for="TipoMascotaId" class="form-control">
-                <span asp-validation-for="TipoMascotaId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Raza" class="control-label"></label>
-                <input asp-for="Raza" class="form-control">
-                <span asp-validation-for="Raza" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Nacimiento" class="control-label"></label>
-                <input asp-for="Nacimiento" class="form-control">
-                <span asp-validation-for="Nacimiento" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Comentarios" class="control-label"></label>
-                <input asp-for="Comentarios" class="form-control">
-                <span asp-validation-for="Comentarios" class="text-danger"></span>
-            </div>
+            <partial name="_Mascota" />
             <div class="form-group">
                 <input type="submit" value="Edit" class="btn btn-success" /> |
                 <a asp-action="Details" asp-route-id="@Model.PropietarioId" class="btn btn-danger">Volver</a>
