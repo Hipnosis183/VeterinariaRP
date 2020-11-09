@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.FileProviders;
 using System.Threading.Tasks;
 using VeterinariaRP.Web.Data.Entities;
 using VeterinariaRP.Web.Models;
@@ -61,6 +62,25 @@ namespace VeterinariaRP.Web.Helpers
         public async Task LogoutAsync()
         {
             await _SignInManager.SignOutAsync();
+        }
+
+        public async Task<bool> DeleteUserAsync(string Email)
+        {
+            User Usuario = await GetUserByEmailAsync(Email);
+
+            if (Usuario == null)
+            {
+                return true;
+            }
+
+            IdentityResult Respuesta = await _UserManager.DeleteAsync(Usuario);
+
+            return Respuesta.Succeeded;
+        }
+
+        public async Task<IdentityResult> UpdateUserAsync(User User)
+        {
+            return await _UserManager.UpdateAsync(User);
         }
     }
 }

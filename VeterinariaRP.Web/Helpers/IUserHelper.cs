@@ -20,5 +20,9 @@ namespace VeterinariaRP.Web.Helpers
         Task<SignInResult> LoginAsync(LoginViewModel Model);
 
         Task LogoutAsync();
+
+        Task<bool> DeleteUserAsync(string Email);
+
+        Task<IdentityResult> UpdateUserAsync(User User);
     }
 }

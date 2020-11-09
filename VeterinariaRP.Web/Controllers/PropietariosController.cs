@@ -136,47 +136,46 @@ namespace VeterinariaRP.Web.Controllers
                 return NotFound();
             }
 
-            var propietario = await _Context.Propietarios.FindAsync(id);
-            if (propietario == null)
+            Propietario Propietario = await _Context.Propietarios.Include(o => o.User).FirstOrDefaultAsync(o => o.Id == id.Value);
+
+            if (Propietario == null)
             {
                 return NotFound();
             }
-            return View(propietario);
+
+            EditUserViewModel Modelo = new EditUserViewModel
+            {
+                Id = Propietario.Id,
+                Direccion = Propietario.User.Direccion,
+                Documento = Propietario.User.Documento,
+                Nombre = Propietario.User.Nombre,
+                Apellido = Propietario.User.Apellido,
+                Telefono = Propietario.User.PhoneNumber
+            };
+
+            return View(Modelo);
         }
 
-        // POST: Propietarios/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id")] Propietario Propietario)
+        public async Task<IActionResult> Edit(EditUserViewModel Model)
         {
-            if (id != Propietario.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _Context.Update(Propietario);
-                    await _Context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PropietarioExists(Propietario.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                Propietario Propietario = await _Context.Propietarios.Include(p => p.User).Include(p => p.Mascotas).FirstOrDefaultAsync(m => m.Id == Model.Id);
+
+                Propietario.User.Documento = Model.Documento;
+                Propietario.User.Nombre = Model.Nombre;
+                Propietario.User.Apellido = Model.Apellido;
+                Propietario.User.Direccion = Model.Direccion;
+                Propietario.User.PhoneNumber = Model.Telefono;
+
+                await _UserHelper.UpdateUserAsync(Propietario.User);
+                await _Context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(Propietario);
+
+            return View(Model);
         }
 
         // GET: Propietarios/Delete/5
@@ -187,24 +186,25 @@ namespace VeterinariaRP.Web.Controllers
                 return NotFound();
             }
 
-            var propietario = await _Context.Propietarios
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (propietario == null)
+            Propietario Propietario = await _Context.Propietarios.Include(p => p.User).Include(p => p.Mascotas).FirstOrDefaultAsync(m => m.Id == id);
+
+            if (Propietario == null)
             {
                 return NotFound();
             }
 
-            return View(propietario);
-        }
+            if (Propietario.Mascotas.Count > 0)
+            {
+                ModelState.AddModelError(string.Empty, "No se puede eliminar la mascota si tiene registros relacionados.");
 
-        // POST: Propietarios/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var propietario = await _Context.Propietarios.FindAsync(id);
-            _Context.Propietarios.Remove(propietario);
+                return RedirectToAction(nameof(Index));
+            }
+
+            await _UserHelper.DeleteUserAsync(Propietario.User.Email);
+
+            _Context.Propietarios.Remove(Propietario);
             await _Context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 

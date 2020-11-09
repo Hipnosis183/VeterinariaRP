@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -123,24 +124,23 @@ namespace VeterinariaRP.Web.Controllers
                 return NotFound();
             }
 
-            var tipoMascota = await _context.TipoMascotas
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (tipoMascota == null)
+            TipoMascota TipoMascota = await _context.TipoMascotas.Include(tm => tm.Mascotas).FirstOrDefaultAsync(tm => tm.Id == id);
+
+            if (TipoMascota == null)
             {
                 return NotFound();
             }
 
-            return View(tipoMascota);
-        }
+            if (TipoMascota.Mascotas.Count > 0)
+            {
+                ModelState.AddModelError(string.Empty, "No se puede eliminar el tipo de mascota si tiene registros relacionados.");
 
-        // POST: TipoMascotas/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var tipoMascota = await _context.TipoMascotas.FindAsync(id);
-            _context.TipoMascotas.Remove(tipoMascota);
+                return RedirectToAction(nameof(Index));
+            }
+
+            _context.TipoMascotas.Remove(TipoMascota);
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
