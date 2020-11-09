@@ -49,5 +49,10 @@ namespace VeterinariaRP.Web.Controllers
             await _UserHelper.LogoutAsync();
             return RedirectToAction("Index", "Home");
         }
+
+        public IActionResult NotAuthorized()
+        {
+            return View();
+        }
     }
 }

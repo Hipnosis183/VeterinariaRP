@@ -34,7 +34,11 @@ namespace VeterinariaRP.Web
                 cfg.Password.RequireUppercase = false;
             }).AddEntityFrameworkStores<DataContext>();
 
-            services.ConfigureApplicationCookie(options => options.LoginPath = "/Cuenta/Login");
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Cuenta/NotAuthorized";
+                options.AccessDeniedPath = "/Cuenta/NotAuthorized";
+            });
 
             services.AddDbContext<DataContext>(cfg =>
             {
@@ -62,6 +66,7 @@ namespace VeterinariaRP.Web
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.UseStatusCodePagesWithReExecute("/error/{0}");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseAuthentication();
