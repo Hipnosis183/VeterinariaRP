@@ -9,5 +9,9 @@ namespace VeterinariaRP.Web.Helpers
         Task<Mascota> ToMascotaAsync(MascotaViewModel Model, string Ruta, bool EsNuevo);
 
         MascotaViewModel ToMascotaViewModel(Mascota Mascota);
+
+        Task<Historia> ToHistoriaAsync(HistoriaViewModel Model, bool EsNuevo);
+
+        HistoriaViewModel ToHistoriaViewModel(Historia Historia);
     }
 }

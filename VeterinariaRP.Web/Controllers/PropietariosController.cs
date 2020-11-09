@@ -321,5 +321,94 @@ namespace VeterinariaRP.Web.Controllers
 
             return View(_ConverterHelper.ToMascotaViewModel(Mascota));
         }
+
+        public async Task<IActionResult> DeleteMascota(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Mascota Mascota = await _Context.Mascotas.Include(m => m.Propietario).Include(m => m.Historias).FirstOrDefaultAsync(p => p.Id == id.Value);
+
+            if (Mascota == null)
+            {
+                return NotFound();
+            }
+
+            if (Mascota.Historias.Count > 0)
+            {
+                ModelState.AddModelError(string.Empty, "No se puede eliminar la mascota si tiene registros relacionados.");
+
+                return new RedirectResult(HttpUtility.UrlDecode((Url.Action($"Details/{Mascota.Propietario.Id}", "Propietarios"))));
+            }
+
+            _Context.Mascotas.Remove(Mascota);
+            await _Context.SaveChangesAsync();
+
+            return new RedirectResult(HttpUtility.UrlDecode((Url.Action($"Details/{Mascota.Propietario.Id}", "Propietarios"))));
+        }
+
+        public async Task<IActionResult> AddHistoria(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Mascota Mascota = await _Context.Mascotas.FindAsync(id.Value);
+
+            if (Mascota == null)
+            {
+                return NotFound();
+            }
+
+            HistoriaViewModel Model = new HistoriaViewModel
+            {
+                Fecha = DateTime.Today,
+                MascotaId = Mascota.Id,
+                TipoServicios = _ComboHelper.GetComboTipoServicio()
+            };
+
+            return View(Model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddHistoria(HistoriaViewModel Model)
+        {
+            if (ModelState.IsValid)
+            {
+                Historia Historia = await _ConverterHelper.ToHistoriaAsync(Model, true);
+
+                _Context.Historias.Add(Historia);
+                await _Context.SaveChangesAsync();
+
+                return new RedirectResult(HttpUtility.UrlDecode((Url.Action($"DetailsMascota/{Model.MascotaId}", "Propietarios"))));
+            }
+
+            Model.TipoServicios = _ComboHelper.GetComboTipoServicio();
+
+            return View(Model);
+        }
+
+        public async Task<IActionResult> DeleteHistoria(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Historia Historia = await _Context.Historias.Include(h => h.Mascota).FirstOrDefaultAsync(h => h.Id == id.Value);
+
+            if (Historia == null)
+            {
+                return NotFound();
+            }
+
+            _Context.Historias.Remove(Historia);
+            await _Context.SaveChangesAsync();
+
+            return new RedirectResult(HttpUtility.UrlDecode((Url.Action($"DetailsMascota/{Historia.Mascota.Id}", "Propietarios"))));
+        }
     }
 }

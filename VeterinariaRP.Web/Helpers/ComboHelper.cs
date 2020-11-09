@@ -32,5 +32,22 @@ namespace VeterinariaRP.Web.Helpers
 
             return Lista;
         }
+
+        public IEnumerable<SelectListItem> GetComboTipoServicio()
+        {
+            List<SelectListItem> Lista = _DataContext.TipoServicios.Select(ts => new SelectListItem
+            {
+                Text = ts.Nombre,
+                Value = $"{ts.Id}"
+            }).OrderBy(pt => pt.Text).ToList();
+
+            Lista.Insert(0, new SelectListItem
+            {
+                Text = "[Seleccione un tipo de servicio.]",
+                Value = "0"
+            });
+
+            return Lista;
+        }
     }
 }

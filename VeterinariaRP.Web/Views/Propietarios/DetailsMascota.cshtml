@@ -101,11 +101,32 @@ else
                         @Html.DisplayFor(modelItem => item.Comentarios)
                     </td>
                     <td>
-                        <a asp-action="EditHistorias" asp-route-id="@item.Id" class="btn btn-primary">Editar</a> |
-                        <a asp-action="DeleteHistorias" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
+                        <a asp-action="EditHistoria" asp-route-id="@item.Id" class="btn btn-primary">Editar</a> |
+                        <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">Eliminar</button>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+}
+
+<partial name="_DeleteDialog" />
+
+@section Scripts
+{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var itemDelete;
+
+            $('.deleteItem').on('click', function (event) {
+                itemDelete = event.currentTarget.dataset.id;
+            });
+
+            $('#btnYesDelete').on('click', function () {
+                window.location.href = '/Propietarios/DeleteHistoria/' + itemDelete;
+            });
+        });
+    </script>
 }

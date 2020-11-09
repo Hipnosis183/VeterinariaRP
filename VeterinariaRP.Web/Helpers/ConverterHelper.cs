@@ -56,5 +56,36 @@ namespace VeterinariaRP.Web.Helpers
                 TipoMascotas = _ComboHelper.GetComboTipoMascota()
             };
         }
+
+        public async Task<Historia> ToHistoriaAsync(HistoriaViewModel Model, bool EsNuevo)
+        {
+            Historia Historia = new Historia
+            {
+                Fecha = Model.Fecha,
+                Descripcion = Model.Descripcion,
+                Id = EsNuevo ? 0 : Model.Id,
+                Mascota = await _DataContext.Mascotas.FindAsync(Model.MascotaId),
+                TipoServicio = await _DataContext.TipoServicios.FindAsync(Model.TipoServicioId),
+                Comentarios = Model.Comentarios
+            };
+
+            return Historia;
+        }
+
+        public HistoriaViewModel ToHistoriaViewModel(Historia Historia)
+        {
+            return new HistoriaViewModel
+            {
+                Fecha = Historia.Fecha,
+                Mascota = Historia.Mascota,
+                TipoServicio = Historia.TipoServicio,
+                Descripcion = Historia.Descripcion,
+                Comentarios = Historia.Comentarios,
+                Id = Historia.Id,
+                MascotaId = Historia.Mascota.Id,
+                TipoServicioId = Historia.TipoServicio.Id,
+                TipoServicios = _ComboHelper.GetComboTipoServicio()
+            };
+        }
     }
 }
