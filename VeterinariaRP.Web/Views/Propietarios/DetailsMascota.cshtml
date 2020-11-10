@@ -46,16 +46,20 @@
         <div class="col-md-4">
             @if (!string.IsNullOrEmpty(Model.ImagenUrl))
             {
-                <img src="@Url.Content(Model.ImagenUrl)" alt="Image" style="width:400px; height:400px; max-width:100%; height:auto;" />
+                <img src="@Url.Content(Model.ImagenUrl)" alt="Image" style="width:400px; height:400px; max-width:80%; height:auto;" />
             }
         </div>
     </div>
 </div>
 <div>
+    @if (Model.Historias.Count == 0)
+    {
+        <a asp-action="AddHistoria" asp-route-id="@Model.Id" class="btn btn-success">Añadir Historia</a><span> | </span>
+    }
     <a asp-action="EditMascota" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a> |
-    <a asp-action="AddHistoria" asp-route-id="@Model.Id" class="btn btn-success">Añadir Historia</a> |
     <a asp-action="Details" asp-route-id="@Model.Propietario.Id" class="btn btn-danger">Volver</a>
 </div>
+
 <br />
 <br />
 @if (Model.Historias.Count == 0)
@@ -65,49 +69,63 @@
 
 else
 {
-    <h4>Lista de Historias</h4>
     <br />
-    <table class="table">
-        <thread>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Historias.FirstOrDefault().FechaLocal)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Historias.FirstOrDefault().TipoServicio.Nombre)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Historias.FirstOrDefault().Descripcion)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Historias.FirstOrDefault().Comentarios)
-                </th>
-            </tr>
-        </thread>
-        <tbody>
-            @foreach (var item in Model.Historias)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FechaLocal)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TipoServicio.Nombre)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Descripcion)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Comentarios)
-                    </td>
-                    <td>
-                        <a asp-action="EditHistoria" asp-route-id="@item.Id" class="btn btn-primary">Editar</a> |
-                        <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">Eliminar</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Lista de Historias  <a asp-action="AddHistoria" asp-route-id="@Model.Id" class="btn btn-success"><span class="fas fa-plus"></span>   Añadir Nueva</a></h3>
+                </div>
+                <br />
+                <div class="panel-body">
+                    <table id="tHistorias" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Historias.FirstOrDefault().FechaLocal)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Historias.FirstOrDefault().TipoServicio.Nombre)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Historias.FirstOrDefault().Descripcion)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Historias.FirstOrDefault().Comentarios)
+                                </th>
+                                <th>
+                                    Acciones
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Historias)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FechaLocal)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TipoServicio.Nombre)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Descripcion)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Comentarios)
+                                    </td>
+                                    <td>
+                                        <a asp-action="EditHistoria" asp-route-id="@item.Id" class="btn btn-primary"><span class="fas fa-edit"></span></a>
+                                        <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog"><span class="fas fa-trash"></span></button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 <partial name="_DeleteDialog" />
@@ -118,6 +136,21 @@ else
 
     <script type="text/javascript">
         $(document).ready(function () {
+            $('#tTipoServicios').DataTable({
+                "language": {
+                    "sSearch": "Buscar :",
+                    "sProcessing": "Procesando...",
+                    "sLoadingRecords": "Cargando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros.",
+                    "sZeroRecords": "No se encontraron resultados.",
+                    "sEmptyTable": "Ningún dato disponible en esta tabla.",
+                    "sInfoFiltered": "(Filtrado de un total de _MAX_ registros).",
+                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros.",
+                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros.",
+                    "oPaginate": { "sFirst": "Primero", "sLast": "Último", "sNext": "Siguiente", "sPrevious": "Anterior" }
+                }
+            });
+
             var itemDelete;
 
             $('.deleteItem').on('click', function (event) {

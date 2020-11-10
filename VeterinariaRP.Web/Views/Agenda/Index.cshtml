@@ -1,47 +1,93 @@
 ﻿@model IEnumerable<VeterinariaRP.Web.Data.Entities.Agenda>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Agenda";
 }
 
-<h1>Index</h1>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Agenda  <a asp-action="Create" class="btn btn-success"><span class="fas fa-plus"></span>   Añadir Nuevo</a></h3>
+            </div>
+            <br />
+            <div class="panel-body">
+                <table id="tAgenda" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Fecha)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Comentarios)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.IsDisponible)
+                            </th>
+                            <th>
+                                Acciones
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FechaLocal)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Comentarios)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsDisponible)
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary"><span class="fas fa-edit"></span></a>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info"><span class="fas fa-list"></span></a>
+                                <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog"><span class="fas fa-trash"></span></button>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Fecha)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Comentarios)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsDisponible)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaLocal)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Comentarios)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsDisponible)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+<partial name="_DeleteDialog" />
+
+@section Scripts
+{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#tAgenda').DataTable({
+                "language": {
+                    "sSearch": "Buscar :",
+                    "sProcessing": "Procesando...",
+                    "sLoadingRecords": "Cargando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros.",
+                    "sZeroRecords": "No se encontraron resultados.",
+                    "sEmptyTable": "Ningún dato disponible en esta tabla.",
+                    "sInfoFiltered": "(Filtrado de un total de _MAX_ registros).",
+                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros.",
+                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros.",
+                    "oPaginate": {"sFirst": "Primero", "sLast": "Último", "sNext": "Siguiente", "sPrevious": "Anterior"}}
+            });
+
+            var itemDelete;
+
+            $('.deleteItem').on('click', function (event) {
+                itemDelete = event.currentTarget.dataset.id;
+            });
+
+            $('#btnYesDelete').on('click', function () {
+                window.location.href = '/Agenda/Delete/' + itemDelete;
+            });
+        });
+    </script>
 }
-    </tbody>
-</table>

@@ -49,10 +49,14 @@
     </dl>
 </div>
 <div>
+    @if (Model.Mascotas.Count == 0)
+    {
+        <a asp-action="AddMascota" asp-route-id="@Model.Id" class="btn btn-success">Añadir Mascota</a><span> | </span>
+    }
     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a> |
-    <a asp-action="AddMascota" asp-route-id="@Model.Id" class="btn btn-success">Añadir Mascota</a> |
     <a asp-action="Index" class="btn btn-danger">Volver</a>
 </div>
+
 <br />
 <br />
 @if (Model.Mascotas.Count == 0)
@@ -62,71 +66,85 @@
 
 else
 {
-    <h4>Lista de Mascotas</h4>
     <br />
-    <table class="table">
-        <thread>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().Nombre)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().ImagenUrl)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().Raza)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().TipoMascota.Nombre)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().NacimientoLocal)
-                </th>
-                <th>
-                    Historias
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().Comentarios)
-                </th>
-            </tr>
-        </thread>
-        <tbody>
-            @foreach (var item in Model.Mascotas)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Nombre)
-                    </td>
-                    <td>
-                        @if (!string.IsNullOrEmpty(item.ImagenUrl))
-                        {
-                            <img src="@Url.Content(item.ImagenUrl)" alt="Image" style="width:100px; height:100px; max-width:100%; height:auto;" />
-                        }
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Raza)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TipoMascota.Nombre)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NacimientoLocal)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Historias.Count)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Comentarios)
-                    </td>
-                    <td>
-                        <a asp-action="EditMascota" asp-route-id="@item.Id" class="btn btn-primary">Editar</a> |
-                        <a asp-action="DetailsMascota" asp-route-id="@item.Id" class="btn btn-info">Detalles</a> |
-                        <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">Eliminar</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Lista de Mascotas  <a asp-action="AddMascota" asp-route-id="@Model.Id" class="btn btn-success"><span class="fas fa-plus"></span>   Añadir Nueva</a></h3>
+                </div>
+                <br />
+                <div class="panel-body">
+                    <table id="tTipoServicios" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().Nombre)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().ImagenUrl)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().Raza)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().TipoMascota.Nombre)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().NacimientoLocal)
+                                </th>
+                                <th>
+                                    Historias
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().Comentarios)
+                                </th>
+                                <th>
+                                    Acciones
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Mascotas)
+                            {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Nombre)
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.ImagenUrl))
+                                    {
+                                        <img src="@Url.Content(item.ImagenUrl)" alt="Image" style="width:100px; height:100px; max-width:100%; height:auto;" />
+                                    }
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Raza)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TipoMascota.Nombre)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.NacimientoLocal)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Historias.Count)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Comentarios)
+                                </td>
+                                <td>
+                                    <a asp-action="EditMascota" asp-route-id="@item.Id" class="btn btn-primary"><span class="fas fa-edit"></span></a>
+                                    <a asp-action="DetailsMascota" asp-route-id="@item.Id" class="btn btn-info"><span class="fas fa-list"></span></a>
+                                    <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog"><span class="fas fa-trash"></span></button>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 <partial name="_DeleteDialog" />
@@ -134,19 +152,33 @@ else
 @section Scripts
 {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    
+
     <script type="text/javascript">
-    $(document).ready(function ()
-    {
-        var itemDelete;
+        $(document).ready(function () {
+            $('#tTipoServicios').DataTable({
+                "language": {
+                    "sSearch": "Buscar :",
+                    "sProcessing": "Procesando...",
+                    "sLoadingRecords": "Cargando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros.",
+                    "sZeroRecords": "No se encontraron resultados.",
+                    "sEmptyTable": "Ningún dato disponible en esta tabla.",
+                    "sInfoFiltered": "(Filtrado de un total de _MAX_ registros).",
+                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros.",
+                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros.",
+                    "oPaginate": { "sFirst": "Primero", "sLast": "Último", "sNext": "Siguiente", "sPrevious": "Anterior" }
+                }
+            });
 
-        $('.deleteItem').on('click', function (event) {
-            itemDelete = event.currentTarget.dataset.id;
-        });
+            var itemDelete;
 
-        $('#btnYesDelete').on('click', function () {
-            window.location.href = '/Propietarios/DeleteMascota/' + itemDelete;
+            $('.deleteItem').on('click', function (event) {
+                itemDelete = event.currentTarget.dataset.id;
+            });
+
+            $('#btnYesDelete').on('click', function () {
+                window.location.href = '/Propietarios/DeleteMascota/' + itemDelete;
+            });
         });
-    });
     </script>
 }
